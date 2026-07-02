@@ -1,0 +1,30 @@
+name: validate
+
+# Runs Eden's deterministic ground-truth analysis suites on every push and PR.
+# These need only numpy + scipy (no hardware, no BrainFlow, no Flask).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  analysis-suites:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install analysis dependencies
+        run: python -m pip install --upgrade pip numpy scipy
+
+      - name: PAC validation suite
+        run: python simulate_pac_validation.py
+
+      - name: Criticality validation suite
+        run: python simulate_criticality_validation.py
