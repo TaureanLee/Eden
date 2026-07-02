@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Eden">
+  <rect width="64" height="64" rx="14" fill="#141e26"/>
+  <!-- laurel sprig -->
+  <g>
+    <path d="M14 46 C24 40 34 30 46 16" fill="none" stroke="#1f7d3a" stroke-width="3" stroke-linecap="round"/>
+    <g fill="#2fa651">
+      <path d="M0,0 C4,-5 12,-6 18,0 C12,6 4,5 0,0 Z" transform="translate(20,40) rotate(-40) scale(0.7)"/>
+      <path d="M0,0 C4,-5 12,-6 18,0 C12,6 4,5 0,0 Z" transform="translate(30,31) rotate(-40) scale(0.72)"/>
+      <path d="M0,0 C4,-5 12,-6 18,0 C12,6 4,5 0,0 Z" transform="translate(40,22) rotate(-40) scale(0.72)"/>
+    </g>
+    <g fill="#37b85e">
+      <path d="M0,0 C4,-5 12,-6 18,0 C12,6 4,5 0,0 Z" transform="translate(24,44) rotate(140) scale(0.66)"/>
+      <path d="M0,0 C4,-5 12,-6 18,0 C12,6 4,5 0,0 Z" transform="translate(34,35) rotate(140) scale(0.68)"/>
+    </g>
+  </g>
+  <!-- three-bar E -->
+  <g fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round">
+    <path d="M13 20 H30"/>
+    <path d="M13 32 H26"/>
+    <path d="M13 44 H30"/>
+  </g>
+</svg>

@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eden — your brain, live. An honest real-time EEG reader.</title>
+  <meta name="description" content="Eden reads the tiny electrical rhythms of your brain in real time and shows an honest picture of theta–gamma coupling and cortical criticality — built to tell real coupling apart from convincing fakes. An Exergis product by Taurean Lee.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Eden — your brain, live.">
+  <meta property="og:description" content="A real-time window into the rhythms behind thinking and memory — built to tell real coupling apart from convincing fakes.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/app-screenshot.png">
+  <meta name="theme-color" content="#0d151c">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <noscript><style>.reveal{opacity:1 !important;transform:none !important}</style></noscript>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="nav-brand" href="#top">
+        <img src="assets/eden-logo.png" alt="Eden">
+        <span class="by">by Exergis</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#what">Overview</a>
+        <a href="#how">How it works</a>
+        <a href="#rigor">Rigor</a>
+        <a href="guide.html">The guide</a>
+        <a class="nav-cta" href="#download">Get Eden</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap">
+        <img class="logo-mark" src="assets/eden-logo.png" alt="Eden logo">
+        <h1>See what actually <span class="accent">sharpens your mind.</span></h1>
+        <p class="lede">
+          Meditation, cognitive training, deep work — Eden shows their effect on your
+          <b>theta–gamma coupling</b> and <b>cortical criticality</b> in real time, turning
+          <em>“I think this helps”</em> into something you can watch. Two rigorous readings,
+          one live picture of the state behind your focus.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#demo">See it live ↓</a>
+          <a class="btn btn-ghost" href="#download">Get Eden</a>
+        </div>
+        <div class="chips">
+          <span class="chip"><b>runs locally</b> · your data never leaves your machine</span>
+          <span class="chip">no headset? <b>synthetic demo</b> built in</span>
+          <span class="chip">educational, <b>not medical</b></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE DEMO -->
+    <section id="demo">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">Try it</span>
+          <h2>Point it at a state — watch your brain respond</h2>
+          <p>Choose what you’re doing and see how theta–gamma coupling and criticality shift. This is an <b>illustrative simulation with sample data</b>, not a real recording — the app computes exactly this, live, from your own EEG.</p>
+        </div>
+
+        <div class="demo reveal">
+          <div class="demo-screen">
+            <div class="demo-top">
+              <span class="demo-live"><span class="demo-live-dot"></span>live · sample data</span>
+              <span class="demo-mode-tag" id="demo-mode-tag">deep focus</span>
+            </div>
+            <div class="demo-grid">
+              <div class="demo-metrics">
+                <div class="demo-ratio">
+                  <span class="demo-ratio-val" id="demo-ratio">9.4</span>
+                  <span class="demo-ratio-unit">γ:θ ratio</span>
+                </div>
+                <div class="demo-block">
+                  <div class="demo-block-head"><span>coupling strength</span><span id="demo-coupling-pct" class="demo-accent">82%</span></div>
+                  <div class="demo-meter"><div class="demo-meter-fill" id="demo-coupling-fill"></div></div>
+                </div>
+                <div class="demo-block">
+                  <div class="demo-block-head"><span>criticality</span><span id="demo-crit-label" class="demo-accent">near-critical</span></div>
+                  <div class="demo-axis"><div class="demo-axis-marker" id="demo-crit-marker"></div></div>
+                  <div class="demo-axis-ends"><span>subcritical</span><span>near-critical</span><span>supercritical</span></div>
+                </div>
+              </div>
+              <div class="demo-wave-wrap">
+                <canvas id="demo-wave" aria-label="Animated waveform showing fast gamma bursts nested on the slow theta rhythm"></canvas>
+                <span class="demo-wave-label">theta carrier · gamma nested on its phase</span>
+              </div>
+            </div>
+
+            <div class="demo-bands">
+              <div class="demo-dominant-hero">
+                <span class="demo-dominant-band" id="demo-dominant">beta</span>
+                <span class="demo-dominant-meaning" id="demo-dominant-meaning">Active thinking, focus</span>
+              </div>
+              <ul class="demo-band-list">
+                <li data-band="delta"><span class="dband-name">delta</span><span class="dband-range">1–4 Hz</span><span class="dband-bar"><div></div></span><span class="dband-val">0.00</span></li>
+                <li data-band="theta"><span class="dband-name">theta</span><span class="dband-range">4–8 Hz</span><span class="dband-bar"><div></div></span><span class="dband-val">0.00</span></li>
+                <li data-band="alpha"><span class="dband-name">alpha</span><span class="dband-range">8–13 Hz</span><span class="dband-bar"><div></div></span><span class="dband-val">0.00</span></li>
+                <li data-band="beta"><span class="dband-name">beta</span><span class="dband-range">13–30 Hz</span><span class="dband-bar"><div></div></span><span class="dband-val">0.00</span></li>
+                <li data-band="gamma"><span class="dband-name">gamma</span><span class="dband-range">30–50 Hz</span><span class="dband-bar"><div></div></span><span class="dband-val">0.00</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="demo-modes" role="group" aria-label="Choose a simulated state">
+            <button class="demo-mode-btn active" data-mode="focus">Deep focus · N-back</button>
+            <button class="demo-mode-btn" data-mode="meditation">Meditation</button>
+            <button class="demo-mode-btn" data-mode="distracted">Distracted · tired</button>
+          </div>
+          <p class="demo-caption">Sample data for illustration only — not a real EEG recording. Install Eden to measure your own brain.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT IT IS -->
+    <section id="what">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">What Eden shows</span>
+          <h2>Three honest readouts, side by side</h2>
+          <p>Every claim is gated behind oscillation detection, artifact rejection, surrogate significance testing, and a harmonic-artifact safeguard — and reported with a confidence measure instead of a single confident-sounding number.</p>
+        </div>
+        <div class="grid grid-3">
+          <div class="card reveal">
+            <div class="ico">〜</div>
+            <h3>Live brainwaves</h3>
+            <p>Eight EEG channels at 250 Hz, sorted into delta, theta, alpha, beta and gamma, with your dominant rhythm highlighted as it changes moment to moment.</p>
+          </div>
+          <div class="card reveal">
+            <div class="ico">◎</div>
+            <h3>Theta–gamma coupling (PAC)</h3>
+            <p>Per-channel phase–amplitude coupling via Tort’s Modulation Index, tested against a surrogate null — reported with effect size, significance, agreement and harmonic risk, never one opaque score.</p>
+          </div>
+          <div class="card reveal">
+            <div class="ico">△</div>
+            <h3>Cortical criticality</h3>
+            <p>A separate estimate of whether your cortex is subcritical, near-critical, or supercritical — computed independently of PAC, so any relationship between them is observed, not baked in.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT IT'S FOR -->
+    <section id="for" style="background: linear-gradient(180deg, var(--bg), var(--bg-2));">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">What it's for</span>
+          <h2>See how your mind responds to what you do</h2>
+          <p>Coupling strength and criticality are independent readouts, but together they sketch your cognitive state: strong, clean theta–gamma coupling tracks memory and focus, and a near-critical cortex is the balanced, “in the zone” state. Watched side by side — always against <em>your own baseline</em> — Eden becomes a lens for self-experimentation: a way to observe how different practices move your brain toward, or away from, its optimized zone.</p>
+        </div>
+        <div class="grid grid-2">
+          <div class="card reveal">
+            <div class="ico">☯</div>
+            <h3>Meditation &amp; flow</h3>
+            <p>Watch coupling and criticality shift during focused-attention or open-awareness meditation, and see whether deep sessions pull you toward the near-critical sweet spot.</p>
+          </div>
+          <div class="card reveal">
+            <div class="ico">⇄</div>
+            <h3>Cognitive training</h3>
+            <p>Compare your state through demanding working-memory and flexibility drills — dual-, quad-, even penta-N-back, image streaming, Relational Frame Theory — where focus, flexibility and awareness are all pushed hard.</p>
+          </div>
+          <div class="card reveal">
+            <div class="ico">◈</div>
+            <h3>Diet &amp; nootropics</h3>
+            <p>Run simple before/after comparisons around inputs like high-flavanol cacao, looking for shifts against your personal baseline rather than reading into a single number.</p>
+          </div>
+          <div class="card reveal">
+            <div class="ico">⌖</div>
+            <h3>Deep work</h3>
+            <p>Check whether you’re actually in the high-coupling, near-critical zone before and during focused work — instead of guessing at your own state.</p>
+          </div>
+        </div>
+        <div class="callout warn reveal" style="margin-top: 22px;">
+          These are <b>exploratory, personal comparisons</b> — associations measured against your own baseline, not proof of cause, and not medical advice. Eden shows how your rhythms move; the experiment, and what you conclude from it, is yours.
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOWCASE -->
+    <section class="showcase" id="showcase">
+      <div class="wrap">
+        <div class="browser reveal">
+          <div class="bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="addr">http://127.0.0.1:5000</span>
+          </div>
+          <img src="assets/app-screenshot.png" alt="The Eden web app running live, showing the theta–gamma ratio, coupling strength, and layered analysis panels." loading="lazy">
+        </div>
+        <p class="cap">The Eden web app, live in your own browser — served from your machine, not the cloud. (Shown in synthetic demo mode.)</p>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- HOW IT WORKS -->
+    <section id="how">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">How it works</span>
+          <h2>From invisible electricity to a live picture</h2>
+          <p>A headset captures the buzz; a small Python program does all the math; your browser draws it — updating about once a second.</p>
+        </div>
+        <div class="flow">
+          <div class="flow-step reveal">
+            <span class="n">01</span>
+            <h3>Your brain</h3>
+            <p>Billions of neurons fire together in repeating rhythms, adding up to tiny measurable voltages.</p>
+          </div>
+          <div class="flow-step reveal">
+            <span class="n">02</span>
+            <h3>The headset</h3>
+            <p>8 electrodes sample each spot 250× a second and stream over Bluetooth — well above the Nyquist limit for gamma.</p>
+          </div>
+          <div class="flow-step reveal">
+            <span class="n">03</span>
+            <h3><span class="mono">server.py</span></h3>
+            <p>A local Flask server keeps a rolling buffer, runs the full analysis each interval, and streams results over SSE.</p>
+          </div>
+          <div class="flow-step reveal">
+            <span class="n">04</span>
+            <h3>Your browser</h3>
+            <p>The page subscribes to that one-way feed and repaints charts, numbers and colors — live, no refresh.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGOR -->
+    <section id="rigor" style="background: linear-gradient(180deg, var(--bg-2), var(--bg));">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">Built to be honest</span>
+          <h2>PAC is famously easy to fake. Eden refuses to be fooled.</h2>
+          <p>It behaves like a strict, skeptical scientist and won’t claim coupling until it has ruled out the boring explanations.</p>
+        </div>
+        <div class="rigor">
+          <div class="rigor-item reveal"><span class="tick">✓</span><div><h3>Each spot on its own</h3><p>All 8 channels are analyzed separately, never blended first — averaging can cancel real coupling that sits at different phases across the scalp.</p></div></div>
+          <div class="rigor-item reveal"><span class="tick">✓</span><div><h3>Confirms a real slow wave</h3><p>A specparam/FOOOF-style fit separates the 1/f background from true peaks. No genuine theta peak → “θ unreliable — PAC not calculated.”</p></div></div>
+          <div class="rigor-item reveal"><span class="tick">✓</span><div><h3>Distrusts the edges</h3><p>A peak landing exactly on a band boundary (say 30 Hz) is flagged as suspect — usually a filter edge effect, not a real oscillator.</p></div></div>
+          <div class="rigor-item reveal"><span class="tick">✓</span><div><h3>Throws out bad moments</h3><p>Blinks, jaw clenches, dropouts and muscle bursts are detected and discarded. Dropouts are never interpolated — inventing data can manufacture coupling.</p></div></div>
+          <div class="rigor-item reveal"><span class="tick">✓</span><div><h3>Real coupling, not a stand-in</h3><p>Strength is the Tort Modulation Index — how far gamma’s distribution across theta phase sits from perfectly flat (KL divergence).</p></div></div>
+          <div class="rigor-item reveal"><span class="tick">✓</span><div><h3>Compares against luck</h3><p>A time-shift surrogate null is built by scrambling timing many times; the real MI is expressed as a z-score and percentile it must clearly beat.</p></div></div>
+          <div class="rigor-item reveal"><span class="tick">✓</span><div><h3>Watches for fakers</h3><p>Sharp, non-sinusoidal theta imitates gamma via harmonics. Eden rates harmonic risk — and a too-perfect 10:1 ratio raises suspicion, not confidence.</p></div></div>
+          <div class="rigor-item reveal"><span class="tick">✓</span><div><h3>Rehearsed on known answers</h3><p>The whole pipeline is validated on synthetic signals with known ground truth — genuine PAC, none, harmonics, noise, transients, bursts, dropouts — and passes every check.</p></div></div>
+        </div>
+        <div class="callout reveal" style="margin-top: 22px;">
+          Instead of a single tidy percentage, every result carries the estimator’s name, the z-score and surrogate percentile, how many channels agree, the window quality, and the harmonic risk. <b>The point isn’t to sound sure — it’s to be honest about how sure it actually is.</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- BANDS -->
+    <section id="bands">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">The rhythms</span>
+          <h2>Your brain plays several notes at once</h2>
+          <p>Eden measures the power in each band — but power alone never tells you whether two bands <em>cooperate</em>, only how loud each is. That’s why a dedicated coupling measure exists.</p>
+        </div>
+        <div class="bands reveal">
+          <table>
+            <thead><tr><th>Wave</th><th>Speed</th><th>Usually seen when…</th></tr></thead>
+            <tbody>
+              <tr><td class="band">Delta</td><td><span class="hz">1–4 Hz</span></td><td>Deep, dreamless sleep</td></tr>
+              <tr class="hl"><td class="band">Theta</td><td><span class="hz">4–8 Hz</span></td><td>Sleepy, daydreaming, meditating — the slow partner</td></tr>
+              <tr><td class="band">Alpha</td><td><span class="hz">8–13 Hz</span></td><td>Calm and relaxed, eyes closed</td></tr>
+              <tr><td class="band">Beta</td><td><span class="hz">13–30 Hz</span></td><td>Awake, thinking, focused</td></tr>
+              <tr class="hl"><td class="band">Gamma</td><td><span class="hz">30–50 Hz</span></td><td>Hard concentration — the fast partner</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRIDENT -->
+    <section id="trident" style="background: linear-gradient(180deg, var(--bg), var(--bg-2));">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">Criticality · Trident-state</span>
+          <h2>How “tuned” is your cortex right now?</h2>
+          <p>Read from three independent clues — the 1/f slope (an excitation/inhibition proxy), the arousal balance of fast rhythms vs alpha, and long-range temporal correlations — and computed completely separately from PAC.</p>
+        </div>
+        <div class="trident-axis reveal">
+          <div class="axis-track"><span class="marker"></span></div>
+          <div class="axis-labels">
+            <span>subcritical<br><span class="small muted">under-aroused, sluggish</span></span>
+            <span class="mid">near-critical<br><span class="small muted">“in the zone”</span></span>
+            <span style="text-align:right">supercritical<br><span class="small muted">over-aroused, racing</span></span>
+          </div>
+        </div>
+        <p class="center muted small" style="max-width:640px;margin:24px auto 0;">The panel also suggests a Trident <em>remedy</em> — which rhythm to gently encourage back toward the sweet spot: gamma to wake an under-aroused brain, alpha to calm an over-aroused one, theta to hold the balance. Educational, not medical advice.</p>
+      </div>
+    </section>
+
+    <!-- DOWNLOAD -->
+    <section class="download" id="download">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">Get Eden</span>
+          <h2>Runs on your machine in one step</h2>
+          <p>Eden’s live analyzer talks to a headset paired to <em>your</em> computer, so it runs locally — the web UI is simply served from <span class="mono">localhost</span>. No cloud, no account, no data leaving your device.</p>
+        </div>
+
+        <div class="grid grid-2" style="align-items:start;">
+          <div class="reveal">
+            <div class="tabs" role="tablist">
+              <button class="tab active" data-tab="win">Windows</button>
+              <button class="tab" data-tab="mac">macOS</button>
+              <button class="tab" data-tab="linux">Linux</button>
+            </div>
+
+            <div class="pane active" data-pane="win">
+              <div class="code">
+                <span class="ln c"># from the Eden folder — double-click run.bat, or:</span>
+                <span class="ln"><span class="p">.\run.ps1</span></span>
+                <span class="ln c"># first run sets up everything, then opens your browser</span>
+              </div>
+            </div>
+            <div class="pane" data-pane="mac">
+              <div class="code">
+                <span class="ln c"># from the Eden folder:</span>
+                <span class="ln"><span class="p">./run.sh</span></span>
+                <span class="ln c"># creates the environment, installs deps, opens your browser</span>
+              </div>
+            </div>
+            <div class="pane" data-pane="linux">
+              <div class="code">
+                <span class="ln c"># from the Eden folder:</span>
+                <span class="ln"><span class="p">./run.sh</span></span>
+                <span class="ln c"># creates the environment, installs deps, opens your browser</span>
+              </div>
+            </div>
+
+            <p class="small muted" style="margin-top:14px;">Prefer to do it by hand? See the <a href="guide.html#run">step-by-step guide</a>. Requires <b>Python 3.10+</b>. Then open <span class="mono">http://127.0.0.1:5000</span> and pick your headset in the browser.</p>
+          </div>
+
+          <div class="reveal">
+            <div class="card">
+              <h3 style="margin-bottom:12px;">No headset? Explore right away</h3>
+              <div class="code" style="margin-bottom:16px;">
+                <span class="ln"><span class="p">python server.py --synthetic</span></span>
+              </div>
+              <p class="muted small" style="margin-bottom:18px;">Streams a realistic simulated brain so you can see the whole UI with no hardware.</p>
+              <h3 style="margin-bottom:10px;">Works with many headsets</h3>
+              <div class="headsets">
+                <span class="h">Unicorn Hybrid Black</span>
+                <span class="h">Muse 2 / S</span>
+                <span class="h">OpenBCI Cyton</span>
+                <span class="h">Ganglion</span>
+                <span class="h">BrainBit</span>
+                <span class="h">Neurosity Crown</span>
+                <span class="h">FreeEEG32</span>
+                <span class="h">Emotiv Insight</span>
+              </div>
+              <p class="muted small" style="margin-top:14px;">Any BrainFlow-supported board — picked right in the browser, no command line needed.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIMITS -->
+    <section id="limits">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">The honest limits</span>
+          <h2>What Eden is — and isn’t</h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="callout warn reveal">
+            It <b>can’t</b> diagnose anything, read your thoughts, or tell what you’re thinking about. Consumer dry-electrode EEG has sparse coverage and no source localization, and the coupling it measures is a <em>correlation</em>, not a mind-reader.
+          </div>
+          <div class="callout reveal">
+            Its genuine value is <b>pedagogical and methodological</b>: Eden demonstrates a rigorous, skeptical way to handle a measurement that is famously easy to get wrong. Scalp markers are most meaningful against your own personal baseline.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="foot-inner">
+        <span class="foot-brand"><img src="assets/eden-logo.png" alt="Eden"></span>
+        <div class="foot-links">
+          <a href="#what">Overview</a>
+          <a href="#rigor">Rigor</a>
+          <a href="#download">Get Eden</a>
+          <a href="guide.html">The guide</a>
+        </div>
+      </div>
+      <p class="foot-note">Eden — an Exergis product by Taurean Lee. Educational software, not a medical device.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Download OS tabs
+    document.querySelectorAll('.tab').forEach(function (t) {
+      t.addEventListener('click', function () {
+        var id = t.getAttribute('data-tab');
+        document.querySelectorAll('.tab').forEach(function (x) { x.classList.toggle('active', x === t); });
+        document.querySelectorAll('.pane').forEach(function (p) {
+          p.classList.toggle('active', p.getAttribute('data-pane') === id);
+        });
+      });
+    });
+    // Reveal on scroll
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+    // Safety net: never leave content hidden if the observer doesn't fire.
+    setTimeout(function () {
+      document.querySelectorAll('.reveal:not(.in)').forEach(function (el) { el.classList.add('in'); });
+    }, 600);
+
+    // --- Live demo: interactive theta–gamma coupling + criticality simulation ---
+    (function () {
+      var canvas = document.getElementById("demo-wave");
+      if (!canvas) return;
+      var ctx = canvas.getContext("2d");
+
+      var MODES = {
+        focus:      { coupling: 0.86, ratio: 9.6, crit: 0.50, tag: "deep focus",
+                      bands: { delta: 0.20, theta: 0.48, alpha: 0.40, beta: 0.95, gamma: 0.70 } },
+        meditation: { coupling: 0.64, ratio: 7.3, crit: 0.46, tag: "meditation",
+                      bands: { delta: 0.32, theta: 0.92, alpha: 0.74, beta: 0.34, gamma: 0.28 } },
+        distracted: { coupling: 0.22, ratio: 3.4, crit: 0.19, tag: "distracted",
+                      bands: { delta: 0.55, theta: 0.62, alpha: 0.90, beta: 0.30, gamma: 0.20 } }
+      };
+      var target = MODES.focus;
+      var cur = { coupling: target.coupling, ratio: target.ratio, crit: target.crit };
+      var BAND_KEYS = ["delta", "theta", "alpha", "beta", "gamma"];
+      var curBands = {};
+      BAND_KEYS.forEach(function (k) { curBands[k] = target.bands[k]; });
+
+      var ratioEl = document.getElementById("demo-ratio");
+      var cpctEl = document.getElementById("demo-coupling-pct");
+      var cfillEl = document.getElementById("demo-coupling-fill");
+      var markerEl = document.getElementById("demo-crit-marker");
+      var critLabelEl = document.getElementById("demo-crit-label");
+      var tagEl = document.getElementById("demo-mode-tag");
+      var dominantEl = document.getElementById("demo-dominant");
+      var dominantMeaningEl = document.getElementById("demo-dominant-meaning");
+      var BAND_MEANING = {
+        delta: "Deep sleep", theta: "Drowsy, meditative", alpha: "Relaxed, eyes closed",
+        beta: "Active thinking, focus", gamma: "High-level cognition"
+      };
+      var barEls = {};
+      document.querySelectorAll(".demo-band-list li").forEach(function (el) {
+        barEls[el.dataset.band] = el;
+      });
+
+      document.querySelectorAll(".demo-mode-btn").forEach(function (b) {
+        b.addEventListener("click", function () {
+          document.querySelectorAll(".demo-mode-btn").forEach(function (x) {
+            x.classList.toggle("active", x === b);
+          });
+          target = MODES[b.dataset.mode] || MODES.focus;
+          tagEl.textContent = target.tag;
+        });
+      });
+
+      var W = 0, H = 0, dpr = 1;
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = canvas.clientWidth; H = canvas.clientHeight;
+        canvas.width = W * dpr; canvas.height = H * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize();
+      window.addEventListener("resize", resize);
+
+      var N = 260;
+      var buf = new Array(N).fill(0);
+      var thetaPhase = 0, gammaPhase = 0;
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function ease(a, b, k) { return a + (b - a) * k; }
+
+      function updateText() {
+        ratioEl.textContent = cur.ratio.toFixed(1);
+        var pct = Math.round(cur.coupling * 100);
+        cpctEl.textContent = pct + "%";
+        cfillEl.style.width = pct + "%";
+        markerEl.style.left = (cur.crit * 100).toFixed(1) + "%";
+        critLabelEl.textContent = cur.crit < 0.4 ? "subcritical"
+          : cur.crit > 0.6 ? "supercritical" : "near-critical";
+      }
+
+      function updateBands() {
+        var domKey = BAND_KEYS[0], domVal = -1;
+        BAND_KEYS.forEach(function (k) { if (curBands[k] > domVal) { domVal = curBands[k]; domKey = k; } });
+        BAND_KEYS.forEach(function (k) {
+          var el = barEls[k]; if (!el) return;
+          var w = domVal > 0 ? (curBands[k] / domVal) * 100 : 0;
+          el.querySelector(".dband-bar > div").style.width = w + "%";
+          el.querySelector(".dband-val").textContent = curBands[k].toFixed(2);
+          el.classList.toggle("dominant", k === domKey);
+        });
+        if (dominantEl) dominantEl.textContent = domKey;
+        if (dominantMeaningEl) dominantMeaningEl.textContent = BAND_MEANING[domKey] || "";
+      }
+
+      function advance(steps) {
+        for (var s = 0; s < steps; s++) {
+          thetaPhase += 0.045;
+          gammaPhase += 0.62;
+          var m = cur.coupling;
+          // gamma bursts near the theta peak; near-uniform when coupling is low
+          var env = (1 - m) * 0.35 + m * Math.pow(Math.max(0, Math.cos(thetaPhase)), 2);
+          buf.push(Math.sin(thetaPhase) * 0.62 + env * Math.sin(gammaPhase) * 0.42);
+          buf.shift();
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        var mid = H / 2;
+        ctx.strokeStyle = "rgba(255,255,255,0.06)";
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(W, mid); ctx.stroke();
+        ctx.strokeStyle = "#3ec46a";
+        ctx.lineWidth = 2;
+        ctx.shadowColor = "rgba(62,196,106,0.5)"; ctx.shadowBlur = 6;
+        ctx.beginPath();
+        for (var i = 0; i < N; i++) {
+          var x = (i / (N - 1)) * W;
+          var y = mid - buf[i] * (H * 0.38);
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+
+      var frame = 0, raf = null;
+      function step() {
+        cur.coupling = ease(cur.coupling, target.coupling, 0.05);
+        cur.ratio = ease(cur.ratio, target.ratio + (Math.random() - 0.5) * 0.5, 0.06);
+        cur.crit = ease(cur.crit, target.crit + (Math.random() - 0.5) * 0.02, 0.05);
+        BAND_KEYS.forEach(function (k) { curBands[k] = ease(curBands[k], target.bands[k], 0.05); });
+        advance(3);
+        draw();
+        if (++frame % 4 === 0) { updateText(); updateBands(); }
+        raf = requestAnimationFrame(step);
+      }
+
+      updateText();
+      updateBands();
+      advance(N);   // pre-fill the buffer so it opens mid-signal
+      draw();
+
+      if (reduce) {
+        // No continuous animation; snap values and redraw on mode change.
+        document.querySelectorAll(".demo-mode-btn").forEach(function (b) {
+          b.addEventListener("click", function () {
+            cur.coupling = target.coupling; cur.ratio = target.ratio; cur.crit = target.crit;
+            BAND_KEYS.forEach(function (k) { curBands[k] = target.bands[k]; });
+            advance(N); draw(); updateText(); updateBands();
+          });
+        });
+      } else {
+        var io = new IntersectionObserver(function (ents) {
+          ents.forEach(function (e) {
+            if (e.isIntersecting && !raf) raf = requestAnimationFrame(step);
+            else if (!e.isIntersecting && raf) { cancelAnimationFrame(raf); raf = null; }
+          });
+        }, { threshold: 0.1 });
+        io.observe(canvas);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eden — Exergis</title>
+  <!-- Self-hosted font so Eden runs fully offline and never phones home. -->
+  <link rel="stylesheet" href="vendor/fonts.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#capture-card">Skip to live readout</a>
+  <main class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">~/</span>eden
+        <span class="brand-sub muted small">by Exergis</span>
+      </div>
+      <div class="status" role="status" aria-live="polite">
+        <span id="status-dot" class="dot off" aria-hidden="true"></span>
+        <span id="status-text" class="muted">connecting</span>
+      </div>
+    </header>
+
+    <!-- Device connection (select and connect any EEG from the browser) -->
+    <section id="device-card" class="panel" aria-labelledby="device-label">
+      <div class="panel-head">
+        <span class="label" id="device-label">device</span>
+        <span id="device-status" class="muted small">not connected</span>
+      </div>
+      <div class="device-controls">
+        <label class="field device-select-field">
+          <span class="muted small">headset</span>
+          <select id="device-select" aria-label="Select your EEG headset">
+            <option value="">loading devices…</option>
+          </select>
+        </label>
+        <div id="device-fields" class="device-fields"></div>
+        <p id="device-note" class="muted small device-note"></p>
+        <div class="device-actions">
+          <button id="connect-btn" class="btn" type="button" disabled>connect</button>
+          <button id="disconnect-btn" class="btn ghost" type="button" disabled>disconnect</button>
+        </div>
+      </div>
+      <details class="explain">
+        <summary>Connecting your headset <span class="explain-hint">starts simple, gets deeper</span></summary>
+        <p class="explain-prose">Pick your headset from the list, fill in any connection details it asks for, and press connect &mdash; Eden talks to dozens of EEG devices through the BrainFlow library, so you no longer need the command line. If you do not own a headset yet, choose <em>Synthetic</em> to explore Eden with a realistic simulated brain. Most Bluetooth headsets such as the Unicorn or Muse need to be paired with your computer first; wired boards like OpenBCI Cyton ask for the serial port of their USB dongle, and WiFi boards ask for an IP address. If a connection fails, Eden shows you the exact error so you can fix the pairing or port and try again without restarting anything.</p>
+      </details>
+    </section>
+
+    <!-- Real-time theta-gamma coupling -->
+    <section id="capture-card" class="panel" aria-labelledby="capture-label">
+      <div class="panel-head">
+        <span class="label" id="capture-label">theta-gamma frequency ratio</span>
+        <span class="muted small">peak ratio &mdash; not PAC (see PAC panel)</span>
+      </div>
+      <div class="ratio-row">
+        <div class="ratio-figure">
+          <span id="ratio" class="ratio-value" aria-live="polite" aria-label="gamma to theta ratio">0.00</span>
+          <span class="ratio-unit">γ:θ ratio</span>
+        </div>
+        <div class="cognition">
+          <div class="cognition-head">
+            <span class="muted small">coupling strength</span>
+            <span id="cognition-pct" class="accent small">0%</span>
+          </div>
+          <div class="meter">
+            <div id="cognition-fill" class="meter-fill"></div>
+          </div>
+          <div class="meter-scale">
+            <span>0</span><span>2.5</span><span>5</span><span>7.5</span><span class="accent">10+</span>
+          </div>
+          <div class="frequency-readout">
+            <span class="muted small">detected: </span>
+            <span id="theta-freq" class="freq-value">0.0</span><span class="muted small"> Hz θ / </span>
+            <span id="gamma-freq" class="freq-value">0.0</span><span class="muted small"> Hz γ</span>
+          </div>
+        </div>
+      </div>
+      <details class="explain">
+        <summary>What am I looking at? <span class="explain-hint">starts simple, gets deeper</span></summary>
+        <p class="explain-prose">Your brain hums with a slow rhythm called theta and a fast one called gamma, and this number is simply how many fast gamma waves ride on top of each slow theta wave. When those fast bursts line up neatly on the slow rhythm, your brain is packaging information efficiently, which is a pattern tied to focus and memory, and a ratio in the neighborhood of ten tends to sit in a healthy sweet spot. Strictly speaking, what you see here is a peak-frequency ratio &mdash; the gamma peak divided by the theta peak &mdash; so it is only a quick proxy: it tells you the two rhythms are present in a good proportion, but it does not by itself prove that the gamma is genuinely nested on the theta phase. That stronger claim &mdash; true phase&ndash;amplitude coupling &mdash; is measured separately and more rigorously in the PAC panel below.</p>
+      </details>
+    </section>
+
+    <!-- Cortical criticality / Trident-state (SEPARATE metric from PAC) -->
+    <section id="crit-card" class="panel">
+      <div class="panel-head">
+        <span class="label">criticality (Trident-state)</span>
+        <span id="crit-estimator" class="muted small">E:I + arousal + LRTC</span>
+      </div>
+      <div id="crit-verdict" class="pac-verdict neutral" aria-live="polite">collecting data for criticality…</div>
+      <div class="crit-axis">
+        <div class="crit-axis-labels">
+          <span>subcritical</span><span>near-critical</span><span>supercritical</span>
+        </div>
+        <div class="crit-track">
+          <div class="crit-midzone"></div>
+          <div id="crit-marker" class="crit-marker"></div>
+        </div>
+        <div class="crit-axis-ends">
+          <span class="muted small">low arousal · inhibition</span>
+          <span class="muted small">high arousal · excitation</span>
+        </div>
+      </div>
+      <div class="pac-summary">
+        <div class="pac-stat">
+          <span class="muted small">state</span>
+          <span id="crit-state" class="stat-value">&mdash;</span>
+        </div>
+        <div class="pac-stat">
+          <span class="muted small">confidence</span>
+          <span id="crit-confidence" class="stat-value">&mdash;</span>
+        </div>
+        <div class="pac-stat">
+          <span class="muted small">1/f exponent (E:I)</span>
+          <span id="crit-exponent" class="stat-value">&mdash;</span>
+        </div>
+        <div class="pac-stat">
+          <span class="muted small">arousal</span>
+          <span id="crit-arousal" class="stat-value">&mdash;</span>
+        </div>
+      </div>
+      <div id="crit-trident" class="crit-trident muted small">&mdash;</div>
+      <details class="explain">
+        <summary>What criticality means <span class="explain-hint">starts simple, gets deeper</span></summary>
+        <p class="explain-prose">At its simplest, this shows whether your brain is running slow and sleepy, fast and wired, or balanced right in between, and that balanced middle is the &ldquo;in the zone&rdquo; sweet spot. Brains tend to handle information best when they sit near that balance point, called near-critical: lean too far one way and you are under-aroused, too far the other and you are over-aroused, and the marker simply slides along that line to show where you currently are. Underneath, the position is built from three independent clues &mdash; the slope of your background brain activity (the aperiodic 1/f exponent) read as a tug-of-war between excitation and inhibition, the balance of fast rhythms against the relaxed alpha rhythm read as arousal, and long-range temporal correlations that tend to peak right at the critical point. Crucially, none of these clues use the PAC result at all, so the two readouts stay completely separate and any relationship you happen to notice between coupling and criticality is something you genuinely observed rather than something the app wired together. Because all of these are indirect scalp markers rather than a direct readout of the cortex, a personal baseline over time makes them far more meaningful for you.</p>
+      </details>
+    </section>
+
+    <!-- Electrode signal quality -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="label">electrode quality</span>
+        <span class="muted small">signal integrity (relative noise ×)</span>
+      </div>
+      <div class="electrode-container">
+        <div class="electrode-map-col">
+          <div class="electrode-instruction muted small">Click on indicator to remove/add channel</div>
+          <div class="electrode-map">
+            <svg viewBox="0 0 200 240" class="brain-outline" role="img" aria-label="Top-down map of the head showing electrode positions and their signal quality">
+              <!-- Left hemisphere -->
+              <path d="M 98 44
+                       C 74 40 50 50 38 72
+                       C 28 90 28 112 33 134
+                       C 38 160 52 182 74 192
+                       C 83 196 92 196 98 192
+                       Z"
+                    fill="var(--bg-panel)"
+                    stroke="#aebfc8" stroke-width="2" stroke-linejoin="round"/>
+              <!-- Right hemisphere -->
+              <path d="M 102 44
+                       C 126 40 150 50 162 72
+                       C 172 90 172 112 167 134
+                       C 162 160 148 182 126 192
+                       C 117 196 108 196 102 192
+                       Z"
+                    fill="var(--bg-panel)"
+                    stroke="#aebfc8" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+            <div id="electrode-indicators" class="electrode-indicators"></div>
+          </div>
+        </div>
+        <div class="electrode-legend">
+          <div class="legend-item">
+            <span class="dot-indicator unknown"></span>
+            <span class="muted small">not connected</span>
+          </div>
+          <div class="legend-item">
+            <span class="dot-indicator good"></span>
+            <span class="muted small">good signal</span>
+          </div>
+          <div class="legend-item">
+            <span class="dot-indicator removed"></span>
+            <span class="muted small">removed</span>
+          </div>
+          <div class="legend-item">
+            <span class="dot-indicator bad"></span>
+            <span class="muted small">bad signal</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Band reference + per-channel detail -->
+    <section class="panel" aria-labelledby="bands-label">
+      <div class="panel-head">
+        <span class="label" id="bands-label">dominant band</span>
+        <span id="dominant" class="muted small">&mdash;</span>
+      </div>
+      <div class="dominant-hero">
+        <span id="dominant-band" class="dominant-band" aria-live="polite">&mdash;</span>
+        <span id="dominant-meaning" class="dominant-meaning muted">waiting for data&hellip;</span>
+      </div>
+      <ul id="band-list" class="bands" aria-label="Overall band powers"></ul>
+
+      <div class="band-detail-head">
+        <span class="muted small">per-channel bandpower</span>
+        <span class="muted small">dBµV · click a channel in the head map to remove it</span>
+      </div>
+      <div class="band-detail-wrap">
+        <canvas id="band-detail-chart" height="320"></canvas>
+      </div>
+      <details class="explain">
+        <summary>Reading the per-channel bandpower <span class="explain-hint">starts simple, gets deeper</span></summary>
+        <p class="explain-prose">Each cell shows how much power one electrode is putting into one frequency band, measured in decibel-microvolts (dBµV) just like a dedicated bandpower meter, with a small bar so you can compare channels at a glance. The brightest cell in each channel's column is that channel's dominant rhythm, and the big label up top is the dominant band across your whole head. Splitting beta into low, mid, and high lets you see the difference between relaxed alertness and tense, high-strung focus. Channels you remove on the head map, or that Eden flags as bad, are dimmed so a noisy electrode never misleads you. This view refreshes many times a second, independently of the slower, more rigorous PAC and criticality panels, so it stays as snappy as you move and think.</p>
+      </details>
+    </section>
+
+
+    <!-- Real-time ratio history -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="label">real-time</span>
+        <span class="muted small">last 60 samples</span>
+      </div>
+      <canvas id="chart" height="150" role="img" aria-label="Line chart of the gamma-to-theta ratio over the last 60 samples"></canvas>
+    </section>
+
+    <!-- Frequency band graphs -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="label">frequency graphs</span>
+        <span class="muted small">last 60 samples per band</span>
+      </div>
+      <div class="band-tabs">
+        <button class="band-tab-btn active" data-band="delta">Delta</button>
+        <button class="band-tab-btn" data-band="theta">Theta</button>
+        <button class="band-tab-btn" data-band="alpha">Alpha</button>
+        <button class="band-tab-btn" data-band="beta">Beta</button>
+        <button class="band-tab-btn" data-band="gamma">Gamma</button>
+      </div>
+      <canvas id="band-chart" height="150" role="img" aria-label="Line chart of the selected frequency band power over the last 60 samples"></canvas>
+    </section>
+
+    <!-- Calibration controls + overall frequency spectrum -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="label">calibration</span>
+        <span class="muted small">test noise generator + overall frequencies</span>
+      </div>
+
+      <div class="calibration-controls">
+        <label class="field checkbox-field">
+          <span class="muted small">test signal</span>
+          <span class="toggle-wrap">
+            <input id="test-enabled" type="checkbox" checked />
+            <span class="muted small">enabled</span>
+          </span>
+        </label>
+
+        <label class="field">
+          <span class="muted small">frequency (Hz)</span>
+          <input id="test-frequency" type="number" min="1" max="50" step="0.5" value="10" />
+        </label>
+
+        <label class="field">
+          <span class="muted small">noise level</span>
+          <input id="test-noise" type="number" min="0" max="2" step="0.05" value="0.35" />
+        </label>
+
+        <label class="field">
+          <span class="muted small">amplitude</span>
+          <input id="test-amplitude" type="number" min="0" max="5" step="0.1" value="1.0" />
+        </label>
+
+        <button id="apply-test-signal" class="btn">apply</button>
+      </div>
+
+      <div id="test-summary" class="muted small test-summary">test signal: waiting for backend</div>
+      <canvas id="spectrum-chart" height="170" role="img" aria-label="Frequency spectrum chart comparing real EEG data with the calibration test signal"></canvas>
+    </section>
+
+    <!-- Rigorous per-channel phase-amplitude coupling (PAC) -->
+    <section id="pac-card" class="panel">
+      <div class="panel-head">
+        <span class="label">phase-amplitude coupling (PAC)</span>
+        <span id="pac-estimator" class="muted small">Tort MI + surrogate</span>
+      </div>
+      <div id="pac-verdict" class="pac-verdict neutral" aria-live="polite">collecting data for PAC…</div>
+      <div class="pac-summary">
+        <div class="pac-stat">
+          <span class="muted small">supporting ch</span>
+          <span id="pac-supporting" class="stat-value">&mdash;</span>
+        </div>
+        <div class="pac-stat">
+          <span class="muted small">median z</span>
+          <span id="pac-medianz" class="stat-value">&mdash;</span>
+        </div>
+        <div class="pac-stat">
+          <span class="muted small">window</span>
+          <span id="pac-window" class="stat-value">&mdash;</span>
+        </div>
+        <div class="pac-stat">
+          <span class="muted small">harmonic risk</span>
+          <span id="pac-harmonic" class="stat-value">&mdash;</span>
+        </div>
+      </div>
+      <div class="pac-table-wrap">
+        <table class="pac-table">
+          <thead>
+            <tr>
+              <th>ch</th><th>θ Hz</th><th>γ Hz</th><th>γ type</th>
+              <th>MI</th><th>z</th><th>pct</th><th>pref φ</th>
+              <th>harm</th><th>status</th>
+            </tr>
+          </thead>
+          <tbody id="pac-tbody"></tbody>
+        </table>
+      </div>
+      <details class="explain">
+        <summary>How PAC works <span class="explain-hint">starts simple, gets deeper</span></summary>
+        <p class="explain-prose">PAC asks a simple question: do the fast gamma waves keep showing up at the <em>same point</em> on each slow theta wave, like fireworks that always pop right at the top of a Ferris wheel&rsquo;s turn? To answer it honestly, the app looks at every electrode on its own and never blends them together, because averaging channels first can invent coupling that was not really there. Before trusting any channel it checks that a real theta rhythm is actually present, rising above the background noise, and if it is not, the channel plainly reports &ldquo;θ unreliable&rdquo; and is skipped rather than guessed at. When theta is solid, the coupling strength itself is the Tort modulation index, a measure of how unevenly the gamma is distributed across the theta cycle, and that raw number is then z-scored against a surrogate built by time-shifting the data so that anything explainable by chance is subtracted away. Finally, because a sharp, non-sinusoidal theta wave can mathematically masquerade as gamma, a &ldquo;harmonic risk&rdquo; flag warns you when the apparent coupling might be that kind of waveform artifact instead of a true, independent gamma oscillator.</p>
+      </details>
+    </section>
+
+    <!-- Timed average session -->
+    <section class="panel">
+      <div class="panel-head">
+        <span class="label">session average</span>
+        <span class="muted small">average coupling over time</span>
+      </div>
+      <div class="session-controls">
+        <label class="field">
+          <span class="muted small">duration (s)</span>
+          <input id="duration" type="number" min="5" max="600" step="5" value="30" />
+        </label>
+        <button id="session-btn" class="btn">start</button>
+        <button id="shot-btn" class="btn ghost" disabled>screenshot</button>
+      </div>
+      <div id="session-progress" class="meter thin hidden">
+        <div id="session-progress-fill" class="meter-fill"></div>
+      </div>
+      <div id="session-readout" class="session-readout hidden">
+        <div class="session-stat">
+          <span class="muted small">avg ratio</span>
+          <span id="avg-ratio" class="stat-value">&mdash;</span>
+        </div>
+        <div class="session-stat">
+          <span class="muted small">avg cognition</span>
+          <span id="avg-cog" class="stat-value accent">&mdash;</span>
+        </div>
+        <div class="session-stat">
+          <span class="muted small">samples</span>
+          <span id="sample-count" class="stat-value">&mdash;</span>
+        </div>
+        <div class="session-stat">
+          <span class="muted small">duration</span>
+          <span id="elapsed" class="stat-value">&mdash;</span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot muted small">
+      <span>updated <span id="updated">never</span></span>
+      <span class="foot-brand">Eden — an Exergis product by Taurean Lee</span>
+    </footer>
+  </main>
+
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- Vendored locally so Eden works fully offline and never phones home. -->
+  <script src="vendor/chart.umd.min.js"></script>
+  <script src="vendor/html2canvas.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
