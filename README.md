@@ -235,6 +235,8 @@ cortex on the axis from* **subcritical** *(under-aroused, inhibition-dominant)*
 [`criticality_analysis.py`](criticality_analysis.py) and is validated by
 [`simulate_criticality_validation.py`](simulate_criticality_validation.py).
 
+The cortical-criticality concept measured here is credited to **Dr. Ashton Smith**.
+
 **It is computed independently of PAC.** PAC is deliberately *not* an input. The
 two metrics are shown next to each other so any relationship between them (for
 example, the hypothesis that near-criticality co-occurs with strong theta–gamma

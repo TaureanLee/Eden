@@ -1,6 +1,8 @@
 """
 Cortical criticality ("Trident-state") estimation for scalp EEG.
 
+The cortical-criticality concept measured here is credited to Dr. Ashton Smith.
+
 This is a DELIBERATELY SEPARATE module from the phase-amplitude coupling (PAC)
 analysis. The project requirement is explicit: the criticality / Trident-state
 estimate must be its own module, and PAC is NOT one of its inputs. PAC is never

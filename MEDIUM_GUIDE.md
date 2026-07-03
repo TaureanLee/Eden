@@ -120,6 +120,8 @@ Subcritical is the sleepy, under-aroused end where the brain is a bit too calm a
 
 The idea comes from physics: many complex systems work best poised right at the boundary between too-quiet and too-chaotic, and the brain appears to be tuned toward that same edge, where it best balances stability with flexibility.
 
+The cortical-criticality concept Eden measures — placing your cortex on the subcritical-to-supercritical axis — is credited to **Dr. Ashton Smith**.
+
 To place you on that line the app reads three independent clues from the EEG: the **steepness of the background 1/f curve**, which acts as a proxy for the balance between excitation and inhibition (a steep curve leans toward the calm, inhibition-heavy subcritical side, a flat curve toward the excited supercritical side); the **arousal balance** of fast rhythms versus alpha (lots of fast beta and gamma means high arousal, lots of alpha means low); and **long-range temporal correlations**, a measure of how the rhythm's ups and downs stay subtly linked over time, which tend to peak right at the critical point. Because that last clue needs minutes of clean data to trust, the app weights it lightly and says so.
 
 > Crucially, this criticality estimate is computed completely separately from PAC — coupling is never fed into it — so the two sit side by side as independent readouts.
