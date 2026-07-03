@@ -130,6 +130,18 @@ section { padding: 62px 0; }
 .grid-2 { grid-template-columns: repeat(2, 1fr); }
 @media (max-width: 860px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
 
+/* --- Mobile overflow hardening --------------------------------------------
+   Grid/flex children default to min-width:auto and won't shrink below their
+   content, so long non-wrapping lines (code blocks) or a canvas can widen the
+   whole page on phones. Let them shrink, cap all media to the viewport, wrap
+   code on small screens, and clip any stray horizontal overflow (clip keeps
+   position:sticky working, unlike overflow:hidden). */
+.grid > *, .rigor > *, .flow > *, .demo-grid > * { min-width: 0; }
+img, canvas, svg, video, table { max-width: 100%; }
+html, body { overflow-x: clip; }
+/* NOTE: small-screen overrides for .code/.demo-screen live at the very end of
+   this file, so their source order wins over the base rules defined below. */
+
 .card {
   background: linear-gradient(180deg, var(--panel), var(--bg-2));
   border: 1px solid var(--border); border-radius: var(--radius);
@@ -391,3 +403,12 @@ section { padding: 62px 0; }
 .reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+
+/* ---------- Small-screen overrides (kept LAST so source order wins) -------- */
+@media (max-width: 640px) {
+  .wrap { padding: 0 18px; }
+  .code { max-width: 100%; }
+  .code .ln { white-space: pre-wrap; overflow-wrap: anywhere; padding-left: 14px; padding-right: 14px; }
+  .demo-screen { padding: 18px 14px; }
+  .browser .bar { padding: 9px 12px; }
+}
